@@ -1,0 +1,455 @@
+---
+title: "620 hw03 code-wenfei mao"
+author: "wenfei mao"
+date: "2024-03-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+*Problem 1(a). Analyze the data of Project I (i.e. individual’s summary statistics) from your team using the code of federated learning created by the other team in a match.*
+```{r}
+#summary statistics for Wenfei Mao
+library(readxl)
+data1 <- read_excel("C:/Users/windu/Desktop/620 hw03 data source/620 Data collection-project 1.xlsx")
+head(data1)
+```
+```{r}
+library(dplyr)
+Pickup.1st <- format(data$Pickup.1st, "%H:%M:%S")
+hours <- as.numeric(format(data$Pickup.1st, "%H"))
+minutes <- as.numeric(format(data$Pickup.1st, "%M"))
+seconds <- as.numeric(format(data$Pickup.1st, "%S"))
+time_in_hours <- hours + minutes/60 + seconds/3600
+Pickup.1st_angle <- (time_in_hours / 24)*360
+print(Pickup.1st_angle)
+```
+```{r}
+#model
+model <- lm(Pickups ~ Total.ST.min + Pickup.1st_angle + Proportion_of_SST + Duration_per_use + Xt + Zt + snow + hightem, data = data) #Xt=0 - weekends Xt=1 - Weekdays; Zt=0 - vacation Zt=1 - non-vacation
+summary(model)
+```
+```{r}
+data$Pickup.1st_angle <- Pickup.1st_angle
+head(data)
+```
+```{r}
+data$Pickup.1st_angle <- Pickup.1st_angle
+# 1.mean of the predicator values(X) 
+predicator_values <- select(data, Total.ST.min, Pickup.1st_angle, Proportion_of_SST, Duration_per_use, Xt, Zt, snow, hightem)
+mean_predicator <- colMeans(predicator_values)
+print(mean_predicator)
+
+# 2.mean of response values(Y) 
+response_values <- model$model$Pickups
+mean_response <- mean(response_values)
+print(mean_response)
+```
+```{r}
+# 3.SSXY of data-wenfei mao
+X<- data[, -c(1, 2, 4,5,6, 7)]
+X<- as.matrix(X)
+Y<- data$Pickups
+SSXY_mao <- t(X) %*% Y
+print(SSXY_mao)
+```
+```{r}
+#4.SSTx of the data-wenfei mao
+X<- data[, -c(1, 2, 4,5,6, 7)]
+X<- as.matrix(X)
+SSTx_mao <- t(X) %*% X
+print(SSTx_mao)
+```
+```{r}
+#5.SSTy_mao
+Y <- data$Pickups
+SSTy_mao <- t(Y) %*% Y
+print(SSTy_mao)
+```
+```{r}
+#summary statistics for hong cao
+library(readxl)
+data2 <- read_excel("C:/Users/windu/Desktop/620 hw03 data source/screentime-cao hong.xlsx")
+head(data2)
+```
+```{r}
+#model
+model <- lm(Pickups ~ Total.ST.min + Pickup.1st + Proportion_of_SST + Duration_per_use + Xt + Zt + snow + hightemp, data = data) #Xt=0 - weekends Xt=1 - Weekdays; Zt=0 - vacation Zt=1 - non-vacation
+summary(model)
+```
+```{r}
+# 1.mean of the predicator values(X) 
+predicator_values <- select(data, Total.ST.min, Pickup.1st, Proportion_of_SST, Duration_per_use, Xt, Zt, snow, hightemp)
+mean_predicator_cao <- colMeans(predicator_values)
+print(mean_predicator_cao)
+```
+```{r}
+# 2.mean of response values(Y) 
+response_values <- model$model$Pickups
+mean_response_cao <- mean(response_values)
+print(mean_response_cao)
+```
+```{r}
+#3.SSTy_cao
+Y <- data$Pickups
+SSTy_cao <- t(Y) %*% Y
+print(SSTy_cao)
+```
+```{r}
+#4.SSTx_cao
+X<- data[, -c(1, 2, 4,5,6)]
+X<- as.matrix(X)
+SSTx_cao <- t(X) %*% X
+print(SSTx_cao)
+```
+```{r}
+#5.SSXY_cao
+X<- data[, -c(1, 2, 4,5,6)]
+X<- as.matrix(X)
+Y<- data$Pickups
+SSXY_cao <- t(X) %*% Y
+print(SSXY_cao)
+```
+```{r}
+#summary statistic for jingchao Yang
+library(readxl)
+data3 <- read_excel("C:/Users/windu/Desktop/620 hw03 data source/Yang (1) (1).xlsx")
+head(data3)
+```
+```{r}
+library(dplyr)
+Pickup.1st <- format(data$Pickup.1st, "%H:%M:%S")
+hours <- as.numeric(format(data$Pickup.1st, "%H"))
+minutes <- as.numeric(format(data$Pickup.1st, "%M"))
+seconds <- as.numeric(format(data$Pickup.1st, "%S"))
+time_in_hours <- hours + minutes/60 + seconds/3600
+Pickup.1st_angle <- (time_in_hours / 24)*360
+print(Pickup.1st_angle)
+```
+```{r}
+#model
+model <- lm(Pickups ~ Total.ST.min + Pickup.1st_angle + Proportion_of_SST + Duration_per_use + Xt + Zt + snow + hightem, data = data) #Xt=0 - weekends Xt=1 - Weekdays; Zt=0 - vacation Zt=1 - non-vacation
+summary(model)
+```
+```{r}
+data$Pickup.1st_angle <- Pickup.1st_angle
+head(data)
+```
+```{r}
+# 1.mean of the predicator values(X) 
+predicator_values <- select(data, Total.ST.min, Pickup.1st_angle, Proportion_of_SST, Duration_per_use, Xt, Zt, snow, hightem)
+mean_predicator_Yang <- colMeans(predicator_values)
+print(mean_predicator_Yang)
+```
+```{r}
+# 2.mean of response values(Y) 
+response_values <- model$model$Pickups
+mean_response_Yang <- mean(response_values)
+print(mean_response_Yang)
+```
+```{r}
+#3.SSTx_Yang
+X<- data[, -c(1, 2, 4,5,6, 7 )]
+X<- as.matrix(X)
+SSTx_Yang <- t(X) %*% X
+print(SSTx_Yang)
+```
+```{r}
+#4.SSTy_Yang
+Y <- data$Pickups
+SSTy_Yang <- t(Y) %*% Y
+print(SSTy_Yang)
+```
+```{r}
+#5.SSXY_Yang
+X<- data[, -c(1, 2, 4,5,6, 7 )]
+X<- as.matrix(X)
+Y<- data$Pickups
+SSXY_Yang <- t(X) %*% Y
+print(SSXY_Yang)
+```
+```{r}
+data_rongji  <- read_excel("C:/Users/windu/Desktop/data source-project1-04W04/screentime-cao hong.xlsx") 
+data_yangme  <- read_excel("C:/Users/windu/Desktop/620hw02 data source.xlsx") 
+data_zyzahng <- read_excel("C:/Users/windu/Desktop/data source-project1-04W04/Data of Jingchao Yang.xlsx") 
+```
+
+```{r}
+colnames(data_rongji)
+colnames(data_yangme)
+colnames(data_zyzahng)
+```
+
+```{r}
+response   <- "Total.ST.min"
+predictors <- c("Pickups", "Pickup.1st.angular", "hightem")
+
+summary_stats <- function(data, response, predictors) {
+  X <- as.matrix(cbind(1, data[, predictors]))
+  y <- as.matrix(data[, response])
+  SSX  <- t(X) %*% X
+  SSY  <- t(y) %*% y
+  SSXY <- t(X) %*% y
+  return(list(SSX=SSX, SSY=SSY, SSXY=SSXY))
+}
+
+summary_stats_rongji  <- summary_stats(data_rongji,  response, predictors)
+summary_stats_yangme  <- summary_stats(data_yangme,  response, predictors)
+summary_stats_zyzahng <- summary_stats(data_zyzahng, response, predictors)
+```
+```{r}
+esults_fl <- function(data_1, data_2, data_3, summary_stats_1, summary_stats_2, summary_stats_3, n, p) {
+  
+  Beta <- solve(summary_stats_1$SSX + summary_stats_2$SSX + summary_stats_3$SSX) %*% (summary_stats_1$SSXY + summary_stats_2$SSXY + summary_stats_3$SSXY) 
+  
+  RSS  <- (summary_stats_1$SSY+summary_stats_2$SSY+summary_stats_3$SSY) - 2*t(Beta)%*%(summary_stats_1$SSXY+summary_stats_2$SSXY+summary_stats_3$SSXY) + t(Beta)%*%(summary_stats_1$SSX+summary_stats_2$SSX+summary_stats_3$SSX)%*%Beta
+  
+  AIC <- n * log(RSS) + 2 * p
+  
+  all_response <- c(data_1$Total.ST.min, data_2$Total.ST.min, data_3$Total.ST.min)
+  TSS <- sum((all_response - mean(all_response))**2)
+  adj_R_squared <- 1 - (RSS/(n-p)) / (TSS/(n-1))
+  
+  return(list(Beta=Beta, RSS=RSS, AIC=AIC, adj_R_squared=adj_R_squared))
+}
+
+output <- results_fl(data_rongji, data_yangme, data_zyzahng, 
+                     summary_stats_rongji, summary_stats_yangme, summary_stats_zyzahng,
+                     n=dim(data_rongji)[1]+dim(data_yangme)[1]+dim(data_zyzahng)[1], 
+                     p=length(predictors)+1)
+
+output
+```
+
+
+*probelm 2(a).Team member 1 writes an R function that enables to identify new controls for matching by the means of propensity score matching. Implement the greedy 1:1 matching rule*
+```{r}
+install.packages("MatchIt")
+```
+
+
+```{r}
+data <- data.frame(A =c(1,1,1,1,0,0,0,0,0), hcover =c(0.06,0.07,0.06,0.07,0.07,0.06, 0.02,0.02,0.01),pcdocs =c(0.02, 0.01,0.02,0.01,0.02,0.01,0.04,0.04,0.05))
+psmodel <- glm(A ~ hcover + pcdocs, family=binomial, data = data)
+summary(psmodel)
+```
+```{r}
+pscore <- round(psmodel$fitted,3)
+print(pscore)
+```
+```{r}
+install.packages("Matching")
+```
+```{r}
+install.packages("boot")
+```
+
+
+```{r}
+library("Matching")
+library("boot")
+psmatch <- Match(Tr=data$A, M=1, X=logit(pscore), replace=FALSE)
+print(psmatch)
+```
+*(b)Team member 2 writes an R function that calculates average treatment effect based on matched pairs and associated statistics and p-values for the treatment effect.*
+
+```{r}
+install.packages("tableone")
+```
+
+
+```{r}
+  n = 4
+  mean_treatment <- mean(treatment)
+  mean_control <- mean(control)
+  var_treatment <- var(treatment)
+  var_control <- var(control)
+  n_treatment <- length(treatment)
+  n_control <- length(control)
+  standard_error <- sqrt(var_treatment/n_treatment + var_control/n_control)/sqrt(n)
+  ATE <- mean_treatment - mean_control
+  t_stat <- ATE / standard_error
+  df <- n - 1
+  p_value <- 2 * pt(-abs(t_stat), df)
+  print(ATE)
+  print(p_value)
+```
+
+*(c)Team member 3 writes an R function that aims to examine the quality of matching by plots (e.g.histogram) and diagnostic quantities (e.g. standardized mean difference)*
+```{r}
+pscore = psmodel$fitted
+pscore
+# Extracting the treatment variable
+A = data[,1]
+
+# Computing propensity scores for both groups
+pscore1 = pscore[A==1]
+pscore0 = pscore[A==0]
+
+# Generating histograms for both groups
+hpscore1 = hist(pscore1)
+hpscore0 = hist(pscore0)
+
+# Making the counts of the second histogram negative
+hpscore0$counts = -hpscore0$counts
+
+# Plotting the histogram for the first group
+plot(hpscore1, xlab="propensity scores", xlim=c(0.1,0.9), ylim=c(-1,1),
+     col="red", main="Histograms of propensity scores")
+
+# Adding the histogram for the second group to the plot
+lines(hpscore0, col="blue")
+```
+```{r}
+library("MatchIt")
+match.out= matchit(A ~ hcover+pcdocs,data=data, method="nearest")
+summary(match.out)
+plot(match.out, type="jitter")
+plot(match.out, type="hist")
+```
+
+*probelm 3(a). To create suitable new controls to balance covariate distributions between A and P as well as B and P, respectively. What is the SMD in the resulting matched pairs?*
+```{r}
+library("readxl")
+ScreenTime_A_P = read_xlsx("C:/Users/windu/Desktop/ScreenTime_A_P.xlsx")
+ScreenTime.dat[1:5,]
+```
+```{r}
+ScreenTime_A_P$Treatment_coded <- ifelse(ScreenTime_A_P$Treatment == "A", 1, 
+                                             ifelse(ScreenTime_A_P$Treatment == "P", 0, NA))
+head(ScreenTime_A_P)
+```
+
+
+```{r}
+library(tableone)
+xvars = c("sex","age","pets","siblings")
+matched.tab = CreateTableOne(vars=xvars, strata ="Treatment_coded", data=ScreenTime_A_P, test=FALSE)
+print(matched.tab, smd = TRUE)
+```
+```{r}
+library("readxl")
+ScreenTime_B_P = read_xlsx("C:/Users/windu/Desktop/ScreenTime_B_P.xlsx")
+ScreenTime.dat[1:5,]
+```
+```{r}
+ScreenTime_B_P$Treatment_coded <- ifelse(ScreenTime_B_P$Treatment == "B", 1, 
+                                             ifelse(ScreenTime_B_P$Treatment == "P", 0, NA))
+head(ScreenTime_B_P)
+```
+```{r}
+library(tableone)
+xvars = c("sex","age","pets","siblings")
+matched.tab = CreateTableOne(vars=xvars, strata ="Treatment_coded", data=ScreenTime_B_P, test=FALSE)
+print(matched.tab, smd = TRUE)
+```
+
+*b. Is intervention A (persuasion) or intervention B (competition) effective to reduce the daily total social screen time in comparison to the placebo P? Justify at level α = 0.05.*
+
+```{r}
+library(Matching)
+library(boot)
+psmodel_A_P <- glm(Treatment_coded ~ sex + age + pets + siblings, family=binomial, data = ScreenTime_A_P)
+pscore_A_P <- psmodel_A_P$fitted
+psmatch_A_P = Match(Tr=ScreenTime_A_P$Treatment_coded, M=1, X=logit(pscore_A_P), replace=FALSE)
+matched.out_A_P = ScreenTime_A_P[unlist(psmatch_A_P[c("index.treated","index.control")]),]
+xvars = c("sex","age","pets","siblings")
+matched.tab_A_P = CreateTableOne(vars=xvars, strata ="Treatment_coded", data=ScreenTime_A_P, test=FALSE)
+print(matched.tab_A_P, smd = TRUE)
+```
+
+```{r}
+t.test(ScreenTime_A_P$Treatment_coded == 1, ScreenTime_A_P$Treatment_coded == 0)
+```
+
+```{r}
+psmodel_B_P <- glm(Treatment_coded ~ sex + age + pets + siblings, family=binomial, data = ScreenTime_B_P)
+pscore_B_P <- psmodel_B_P$fitted
+psmatch_B_P = Match(Tr=ScreenTime_B_P$Treatment_coded, M=1, X=logit(pscore_B_P), replace=FALSE)
+matched.out_B_P = ScreenTime_B_P[unlist(psmatch_B_P[c("index.treated","index.control")]),]
+xvars = c("sex","age","pets","siblings")
+matched.tab_B_P = CreateTableOne(vars=xvars, strata ="Treatment_coded", data=ScreenTime_B_P, test=FALSE)
+print(matched.tab_B_P, smd = TRUE)
+```
+```{r}
+t.test(ScreenTime_B_P$Treatment_coded == 1, ScreenTime_B_P$Treatment_coded == 0)
+```
+
+*c. Repeat the analysis in part (b) using the R function match with a control of SMD at 0.1 or lower through tuning the parameter caliper.Compare the results with those obtained from part (b) using your own R function.*
+```{r}
+psmodel_A_P <- glm(Treatment_coded ~ sex + age + pets + siblings, family=binomial, data = ScreenTime_A_P)
+pscore_A_P <- psmodel_A_P$fitted
+psmatch_A_P = Match(Tr=ScreenTime_A_P$Treatment_coded, M=1, X=logit(pscore_A_P), replace=FALSE,caliper =0.1)
+matched.out_A_P = ScreenTime_A_P[unlist(psmatch_A_P[c("index.treated","index.control")]),]
+xvars = c("sex","age","pets","siblings")
+matched.tab_A_P = CreateTableOne(vars=xvars, strata ="Treatment_coded", data=ScreenTime_A_P, test=FALSE)
+print(matched.tab_A_P, smd = TRUE)
+```
+```{r}
+t.test(ScreenTime_A_P$Treatment_coded == 1, ScreenTime_A_P$Treatment_coded==0)
+```
+```{r}
+psmodel_B_P <- glm(Treatment_coded ~ sex + age + pets + siblings, family=binomial, data = ScreenTime_B_P)
+pscore_B_P <- psmodel_B_P$fitted
+psmatch_B_P = Match(Tr=ScreenTime_B_P$Treatment_coded, M=1, X=logit(pscore_B_P), replace=FALSE, caliper =0.1)
+matched.out_B_P = ScreenTime_B_P[unlist(psmatch_B_P[c("index.treated","index.control")]),]
+xvars = c("sex","age","pets","siblings")
+matched.tab_B_P = CreateTableOne(vars=xvars, strata ="Treatment_coded", data=ScreenTime_B_P, test=FALSE)
+print(matched.tab_B_P, smd = TRUE)
+```
+```{r}
+t.test(ScreenTime_B_P$Treatment_coded == 1, ScreenTime_B_P$Treatment_coded==0)
+```
+
+*problem 4(a). Perform a multiple regression analysis as discussed in Section 6.1, Chapter III to estimate the adjusted differential treatment effect between Persuasion Intervention A (coded as 1) and Competition Intervention B (coded as 0). In this analysis, the baseline covariates are included in the model to adjust confounding. Is this adjusted differential treatment effect statistically significant? Justify at level α = 0.05*
+```{r}
+library("readxl")
+ScreenTime_new.dat = read_xlsx("C:/Users/windu/Desktop/ScreenTime.xlsx")
+ScreenTime_new.dat[1:5,]
+```
+
+```{r}
+ScreenTime_new.dat$Treatment_coded <- ifelse(ScreenTime_new.dat$Treatment == "A", 1, 
+                                             ifelse(ScreenTime_new.dat$Treatment == "B", 0, NA))
+head(ScreenTime_new.dat)
+```
+```{r}
+myfit.lm <- lm(Tot.Soc.Time ~ Tot.Scr.Time + Pickups + time + sex + age + pets + siblings + Treatment_coded, data = ScreenTime_new.dat)
+summary(myfit.lm)
+```
+*b.Use the IPW method in Section 6.2, Chapter III to evaluate the differential treatment effect of Persuasion (coded as 1) in the reference to Competition (coded as 0)*
+```{r}
+myfit <- glm(Treatment_coded ~ Tot.Scr.Time + Pickups + time + sex + age + pets + siblings, family = binomial(link = "logit"), data = ScreenTime_new.dat)
+propens = round(myfit$fitted,3)
+print(propens)
+```
+```{r}
+w = 1/propens
+wbar = 1/(1-propens)
+IPW <- sum(w*ScreenTime_new.dat$Treatment_coded*ScreenTime_new.dat$Tot.Soc.Time)/sum(w*ScreenTime_new.dat$Treatment_coded) -
+sum(wbar*(1-ScreenTime_new.dat$Tot.Soc.Time)*ScreenTime_new.dat$Tot.Soc.Time)/sum(wbar*(1-ScreenTime_new.dat$Tot.Soc.Time))
+print(IPW)
+```
+
